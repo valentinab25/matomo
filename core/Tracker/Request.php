@@ -684,7 +684,6 @@ class Request
         }
 
         $cookie = $this->makeThirdPartyCookieUID();
-        $idVisitor = bin2hex($idVisitor);
         $cookie->set(0, $idVisitor);
         if (ProxyHttp::isHttps()) {
             $cookie->setSecure(true);
@@ -834,7 +833,7 @@ class Request
 
     public function getIp()
     {
-        return IPUtils::stringToBinaryIP($this->getIpString());
+        return bin2hex(IPUtils::stringToBinaryIP($this->getIpString()));
     }
 
     public function getForcedUserId()
@@ -938,9 +937,8 @@ class Request
     private function getVisitorIdAsBinary($idVisitor)
     {
         $truncated = $this->truncateIdAsVisitorId($idVisitor);
-        $binVisitorId = @Common::hex2bin($truncated);
-        if (!empty($binVisitorId)) {
-            return $binVisitorId;
+        if (!empty($truncated)) {
+            return bin2hex(hex2bin($truncated));
         }
         return false;
     }
